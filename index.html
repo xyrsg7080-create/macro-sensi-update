@@ -1040,7 +1040,18 @@ Free Look: ${current.free}`;
 
 /* SAVE */
 
-function saveProfile(){
+function openProfile(){
+
+  const name =
+    localStorage.getItem("profileName") || "Macro Sensi User";
+
+  alert(
+    "👤 PROFILE\n\n" +
+    "Name: " + name + "\n\n" +
+    "Macro Sensi User Profile"
+  );
+
+}
 
   if(!current){
     alert("पहले sensitivity generate करो!");
