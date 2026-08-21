@@ -1198,8 +1198,27 @@ function toggleMenu(){
 }
 
 function openProfile(){
-  alert("Profile\n\nMacro Sensi User");
-  }</script>
+
+  const name = prompt(
+    "👤 Profile Name",
+    localStorage.getItem("profileName") || "Macro Sensi User"
+  );
+
+  if(name !== null && name.trim() !== ""){
+
+    localStorage.setItem(
+      "profileName",
+      name.trim()
+    );
+
+    alert(
+      "✅ Profile Updated!\n\nName: " +
+      name.trim()
+    );
+
+  }
+
+</script>
 
 </body>
 </html>
