@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Macro Sensi Generator</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:#070a10;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+.app{
+  max-width:500px;
+  margin:auto;
+  padding:18px;
+}
+
+.header{
+  text-align:center;
+  padding:15px 0 20px;
+}
+
+.logo{
+  width:65px;
+  height:65px;
+  border-radius:20px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  background:linear-gradient(135deg,#ff1744,#ff7b00);
+}
+
+h1{
+  margin:12px 0 5px;
+}
+
+.sub{
+  color:#8993a5;
+  font-size:13px;
+}
+
+.card{
+  background:#111722;
+  border:1px solid #222d3d;
+  border-radius:18px;
+  padding:17px;
+  margin-bottom:15px;
+}
+
+.card h2{
+  font-size:17px;
+  margin:0 0 15px;
+}
+
+label{
+  display:block;
+  color:#9ca7b8;
+  font-size:13px;
+  margin:12px 0 6px;
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border-radius:11px;
+  border:1px solid #2a3547;
+  background:#090d14;
+  color:#fff;
+  outline:none;
+}
+
+input:focus,
+select:focus{
+  border-color:#ff3658;
+}
+
+.generate{
+  width:100%;
+  padding:16px;
+  border:0;
+  border-radius:13px;
+  color:#fff;
+  font-size:16px;
+  font-weight:bold;
+  background:linear-gradient(135deg,#ff1744,#ff7600);
+  cursor:pointer;
+}
+
+.result{
+  display:none;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.box{
+  padding:14px;
+  border-radius:13px;
+  background:#090d14;
+  border:1px solid #263143;
+}
+
+.box span{
+  color:#8d98aa;
+  font-size:12px;
+}
+
+.box strong{
+  display:block;
+  margin-top:6px;
+  color:#ff5570;
+  font-size:25px;
+}
+
+.buttons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+
+.btn{
+  padding:12px;
+  border-radius:11px;
+  border:1px solid #293548;
+  background:#18202d;
+  color:#fff;
+  cursor:pointer;
+}
+
+.feedback{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid #252f40;
+}
+
+.feedbackTitle{
+  text-align:center;
+  color:#aeb7c6;
+  font-size:13px;
+  margin-bottom:12px;
+}
+
+.feedbackButtons{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.workBtn{
+  padding:13px;
+  border:1px solid #245c43;
+  border-radius:11px;
+  background:#10251c;
+  color:#55e69a;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.notBtn{
+  padding:13px;
+  border:1px solid #653040;
+  border-radius:11px;
+  background:#261018;
+  color:#ff7088;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.message{
+  display:none;
+  margin-top:12px;
+  padding:13px;
+  border-radius:11px;
+  text-align:center;
+  font-size:13px;
+}
+
+.success{
+  background:#10251c;
+  border:1px solid #245c43;
+  color:#55e69a;
+}
+
+.problemBox{
+  display:none;
+  margin-top:15px;
+}
+
+.problem{
+  width:100%;
+  text-align:left;
+  padding:13px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #303b4d;
+  background:#0b1018;
+  color:#e1e6ee;
+  cursor:pointer;
+}
+
+.problem:hover{
+  border-color:#ff526c;
+}
+
+.solution{
+  display:none;
+  margin-top:12px;
+  padding:14px;
+  border-radius:12px;
+  background:#171d29;
+  border:1px solid #394558;
+}
+
+.solutionTitle{
+  color:#ffca58;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.solutionText{
+  color:#b9c2d0;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.historyItem{
+  background:#090d14;
+  border:1px solid #263143;
+  border-radius:12px;
+  padding:12px;
+  margin-top:9px;
+}
+
+.historyItem small{
+  color:#778397;
+}
+
+.delete{
+  float:right;
+  color:#ff5570;
+  cursor:pointer;
+}
+
+.empty{
+  text-align:center;
+  color:#697588;
+  font-size:13px;
+  padding:8px;
+}
+
+.footer{
+  text-align:center;
+  color:#596476;
+  font-size:11px;
+  padding:12px;
+}
+
+button:active{
+  transform:scale(.97);
+}
+  /* WORKING TOP MENU */
+.header{position:relative}
+.top-menu{
+  position:absolute;top:12px;right:0;
+  display:flex;gap:8px;
+}
+.top-btn{
+  width:42px;height:42px;border:1px solid #333b4d;
+  border-radius:50%;background:#111722;color:#fff;
+  font-size:20px;cursor:pointer;
+}
+.menu-box{
+  display:none;position:fixed;top:68px;right:15px;width:220px;
+  background:#111722;border:1px solid #333b4d;border-radius:15px;
+  padding:10px;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.55);
+}
+.menu-item{
+  width:100%;padding:13px;margin:4px 0;border:0;border-radius:10px;
+  background:#1a2230;color:#fff;text-align:left;font-size:15px;cursor:pointer;
+}
+.modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);
+  z-index:10000;align-items:center;justify-content:center;padding:20px;
+}
+.modal.show{display:flex}
+.modal-content{
+  width:100%;max-width:420px;max-height:85vh;overflow:auto;
+  background:#111722;border:1px solid #333b4d;border-radius:18px;
+  padding:20px;color:#fff;
+}
+.modal-content h2{margin-top:0}
+.modal-content p{color:#b9c2d0;font-size:13px;line-height:1.6}
+.setting-row{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;padding:13px 0;border-bottom:1px solid #252f40;
+  color:#dbe2ec;font-size:14px;
+}
+.setting-row input[type="checkbox"]{width:20px;height:20px;accent-color:#ff3658}
+.close-btn{
+  width:100%;padding:12px;margin-top:15px;border:0;border-radius:10px;
+  background:#ff1744;color:#fff;font-weight:bold;cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="header">
+  <div class="top-menu">
+  <button class="top-btn" onclick="toggleMenu()">☰</button>
+  <button class="top-btn" onclick="openProfile()">👤</button>
+  </div>
+  <div class="logo">🎯</div>
+  <h1>MACRO SENSI</h1>
+  <div class="sub">Unlimited Macro Sensitivity Generator</div>
+</div>
+
+
+<!-- WORKING MENU -->
+<div id="menuBox" class="menu-box">
+  <button class="menu-item" onclick="openSettings()">⚙️ Settings</button>
+  <button class="menu-item" onclick="openPrivacy()">🔒 Privacy Policy</button>
+  <button class="menu-item" onclick="openProfile()">👤 Profile</button>
+  <button class="menu-item" onclick="closeMenu()">✖️ Close Menu</button>
+</div>
+
+<!-- SETTINGS -->
+<div id="settingsModal" class="modal" onclick="closeModalOnBackdrop(event,'settingsModal')">
+  <div class="modal-content">
+    <h2>⚙️ Settings</h2>
+    <div class="setting-row">
+      <span>🔊 Button feedback</span>
+      <input id="soundSetting" type="checkbox" checked onchange="saveSettings()">
+    </div>
+    <div class="setting-row">
+      <span>💾 Auto-save generated profile</span>
+      <input id="autoSaveSetting" type="checkbox" onchange="saveSettings()">
+    </div>
+    <button class="btn" style="width:100%;margin-top:15px" onclick="clearAppData()">🗑️ Clear App Data</button>
+    <button class="close-btn" onclick="closeModal('settingsModal')">Close</button>
+  </div>
+</div>
+
+<!-- PRIVACY POLICY -->
+<div id="privacyModal" class="modal" onclick="closeModalOnBackdrop(event,'privacyModal')">
+  <div class="modal-content">
+    <h2>🔒 Privacy Policy</h2>
+    <p><b>Macro Sensi Generator</b> uses the information you enter to generate sensitivity profiles.</p>
+    <p>Saved profiles, your profile name, and app settings are stored locally in browser/app storage.</p>
+    <p>This page does not send those saved values to a server. The app can contact the configured update URL only to check whether a newer version is available.</p>
+    <p>You can delete locally stored data from Settings → Clear App Data.</p>
+    <button class="close-btn" onclick="closeModal('privacyModal')">Close</button>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div id="profileModal" class="modal" onclick="closeModalOnBackdrop(event,'profileModal')">
+  <div class="modal-content">
+    <h2>👤 Profile</h2>
+    <label>Profile Name</label>
+    <input id="profileNameInput" placeholder="Macro Sensi User">
+    <button class="generate" style="margin-top:12px" onclick="saveProfileName()">💾 Save Profile Name</button>
+    <button class="close-btn" onclick="closeModal('profileModal')">Close</button>
+  </div>
+</div>
+
+<div class="card">
+
+<h2>📱 Device Information</h2>
+
+<label>Phone Brand</label>
+<input id="brand" placeholder="Vivo">
+
+<label>Phone Model</label>
+<input id="model" placeholder="Y11 5G">
+
+<label>Android Version</label>
+<input id="android" placeholder="Android 16">
+
+<label>RAM</label>
+<select id="ram">
+  <option value="4">4 GB</option>
+  <option value="6">6 GB</option>
+  <option value="8">8 GB</option>
+  <option value="12">12 GB</option>
+  <option value="16">16 GB</option>
+</select>
+
+<label>DPI</label>
+<input id="dpi" type="number" placeholder="435">
+
+<label>Fire Button</label>
+<input id="fire" type="number" min="1" max="100" placeholder="45">
+
+</div>
+
+
+<div class="card">
+
+<h2>⚡ Macro Profile</h2>
+
+<label>Style</label>
+
+<select id="style">
+  <option value="balanced">Balanced</option>
+  <option value="headshot">Headshot Focus</option>
+  <option value="fast">Fast Drag</option>
+  <option value="control">High Control</option>
+</select>
+
+<label>Boost</label>
+
+<select id="boost">
+  <option value="low">Low</option>
+  <option value="medium">Medium</option>
+  <option value="high">High</option>
+  <option value="extreme">Extreme</option>
+</select>
+
+</div>
+
+
+<button class="generate" onclick="generate()">
+⚡ GENERATE MACRO SENSITIVITY
+</button>
+
+
+<div class="card result" id="result">
+
+<h2>🔥 Generated Sensitivity</h2>
+
+<div class="grid">
+
+<div class="box">
+<span>General</span>
+<strong id="general">--</strong>
+</div>
+
+<div class="box">
+<span>Red Dot</span>
+<strong id="red">--</strong>
+</div>
+
+<div class="box">
+<span>2X Scope</span>
+<strong id="two">--</strong>
+</div>
+
+<div class="box">
+<span>4X Scope</span>
+<strong id="four">--</strong>
+</div>
+
+<div class="box">
+<span>Sniper</span>
+<strong id="sniper">--</strong>
+</div>
+
+<div class="box">
+<span>Free Look</span>
+<strong id="free">--</strong>
+</div>
+
+</div>
+
+
+<div class="buttons">
+
+<button class="btn" onclick="copyValues()">
+📋 Copy
+</button>
+
+<button class="btn" onclick="saveProfile()">
+💾 Save
+</button>
+
+<button class="btn" onclick="generate()">
+🔄 Generate Again
+</button>
+
+<button class="btn" onclick="resetApp()">
+♻️ Reset
+</button>
+
+</div>
+
+
+<!-- FEEDBACK -->
+
+<div class="feedback">
+
+<div class="feedbackTitle">
+क्या यह Sensitivity आपके लिए काम कर रही है?
+</div>
+
+<div class="feedbackButtons">
+
+<button class="workBtn" onclick="working()">
+✅ IT'S WORKING
+</button>
+
+<button class="notBtn" onclick="showProblems()">
+❌ NOT WORKING
+</button>
+
+</div>
+
+
+<div id="workingMessage"
+     class="message success">
+❤️ Thanks! हमें खुशी है कि यह Sensitivity आपके लिए काम कर रही है।
+</div>
+
+
+<!-- PROBLEM OPTIONS -->
+
+<div class="problemBox" id="problemBox">
+
+<div class="feedbackTitle">
+क्या दिक्कत आ रही है?
+</div>
+
+
+<button class="problem"
+onclick="showSolution('overhead')">
+🎯 Aim overhead जा रहा है
+</button>
+
+
+<button class="problem"
+onclick="showSolution('body')">
+🧲 Aim body पर चिपक रहा है
+</button>
+
+
+<button class="problem"
+onclick="showSolution('high')">
+📈 Sensitivity ज्यादा high है
+</button>
+
+
+<button class="problem"
+onclick="showSolution('low')">
+📉 Sensitivity ज्यादा low है
+</button>
+
+
+<button class="problem"
+onclick="showSolution('drag')">
+🎮 Drag सही नहीं हो रहा
+</button>
+
+
+<button class="problem"
+onclick="showSolution('other')">
+⚙️ कुछ और problem
+</button>
+
+
+<div class="solution" id="solution">
+
+<div class="solutionTitle" id="solutionTitle">
+💡 Solution
+</div>
+
+<div class="solutionText" id="solutionText">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SAVED PROFILES -->
+
+<div class="card">
+
+<h2>🗂️ Saved Profiles</h2>
+
+<div id="history">
+<div class="empty">No saved profiles</div>
+</div>
+
+<button class="btn"
+style="width:100%;margin-top:12px"
+onclick="clearHistory()">
+🗑️ Clear History
+</button>
+
+</div>
+
+
+<div class="footer">
+Macro Sensi Generator • Unlimited Profiles
+</div>
+
+</div>
+
+
+<script>
+
+const APP_VERSION_CODE = 1;
+const APP_VERSION_NAME = "1.0";
+
+const UPDATE_URL =
+"https://raw.githubusercontent.com/xyrsg7080-create/macro-sensi-update/main/version.json";
+
+async function checkForUpdate(){
+
+  try{
+
+    const response =
+      await fetch(UPDATE_URL + "?t=" + Date.now());
+
+    if(!response.ok) return;
+
+    const data = await response.json();
+
+    if(data.versionCode > APP_VERSION_CODE){
+
+      const updateNow = confirm(
+`🔥 NEW UPDATE AVAILABLE!
+
+Version: ${data.versionName}
+
+${data.updateMessage}
+
+क्या अभी Update करना है?`
+      );
+
+      if(updateNow && data.apkUrl){
+
+        window.location.href = data.apkUrl;
+
+      }
+    }
+
+  }catch(error){
+
+    console.log("Update check failed:", error);
+
+  }
+
+}
+
+window.addEventListener("load", function(){
+
+  setTimeout(checkForUpdate, 1500);
+
+});
+
+let current=null;
+
+
+/* RANDOM NUMBER */
+
+function rand(min,max){
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+
+/* 0-200 MAXIMUM */
+
+function clamp(n){
+  return Math.max(0,Math.min(200,Math.round(n)));
+}
+
+
+/* GENERATE */
+
+function generate(){
+
+  const dpi =
+    Number(document.getElementById("dpi").value) || 435;
+
+  const fire =
+    Number(document.getElementById("fire").value) || 45;
+
+  const style =
+    document.getElementById("style").value;
+
+  const boost =
+    document.getElementById("boost").value;
+
+
+  /*
+  200 सिर्फ maximum है।
+  Values 200 पर fixed नहीं हैं।
+  */
+
+  let base=rand(125,165);
+
+
+  /* DPI */
+
+  if(dpi>=500)
+    base+=rand(3,10);
+
+  else if(dpi>=450)
+    base+=rand(1,6);
+
+  else if(dpi<400)
+    base-=rand(2,7);
+
+
+  /* FIRE BUTTON */
+
+  if(fire>=50)
+    base-=rand(1,5);
+
+  else if(fire<=40)
+    base+=rand(1,5);
+
+
+  /* STYLE */
+
+  if(style==="headshot")
+    base+=rand(4,12);
+
+  if(style==="fast")
+    base+=rand(6,15);
+
+  if(style==="control")
+    base-=rand(5,12);
+
+
+  /* BOOST */
+
+  if(boost==="low")
+    base-=rand(2,6);
+
+  if(boost==="medium")
+    base+=rand(0,5);
+
+  if(boost==="high")
+    base+=rand(4,10);
+
+  if(boost==="extreme")
+    base+=rand(8,16);
+
+
+  /* DIFFERENT VALUES */
+
+  current={
+
+    general:clamp(base+rand(5,22)),
+
+    red:clamp(base+rand(8,27)),
+
+    two:clamp(base+rand(-4,18)),
+
+    four:clamp(base-rand(2,15)),
+
+    sniper:clamp(base-rand(25,55)),
+
+    free:clamp(base+rand(0,20))
+
+  };
+
+
+  /* DISPLAY */
+
+  document.getElementById("general").textContent=current.general;
+
+  document.getElementById("red").textContent=current.red;
+
+  document.getElementById("two").textContent=current.two;
+
+  document.getElementById("four").textContent=current.four;
+
+  document.getElementById("sniper").textContent=current.sniper;
+
+  document.getElementById("free").textContent=current.free;
+
+
+  document.getElementById("result").style.display="block";
+
+
+  /* RESET FEEDBACK FOR NEW GENERATION */
+
+  document.getElementById("workingMessage").style.display="none";
+
+  document.getElementById("problemBox").style.display="none";
+
+  document.getElementById("solution").style.display="none";
+
+
+  document.getElementById("result").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+
+}
+
+
+/* WORKING */
+
+function working(){
+
+  document.getElementById("workingMessage")
+    .style.display="block";
+
+  document.getElementById("problemBox")
+    .style.display="none";
+
+  document.getElementById("solution")
+    .style.display="none";
+
+}
+
+
+/* NOT WORKING */
+
+function showProblems(){
+
+  document.getElementById("workingMessage")
+    .style.display="none";
+
+  document.getElementById("problemBox")
+    .style.display="block";
+
+  document.getElementById("solution")
+    .style.display="none";
+
+}
+
+
+/* SHOW SOLUTION */
+
+function showSolution(type){
+
+  const title =
+    document.getElementById("solutionTitle");
+
+  const text =
+    document.getElementById("solutionText");
+
+
+  if(type==="overhead"){
+
+    title.textContent="🎯 Aim overhead जा रहा है";
+
+    text.textContent=
+    "General और Red Dot sensitivity को थोड़ा कम करके फिर Generate करो। पहले 5–10 points कम करके test करना बेहतर रहेगा।";
+
+  }
+
+
+  else if(type==="body"){
+
+    title.textContent="🧲 Aim body पर चिपक रहा है";
+
+    text.textContent=
+    "General और Red Dot sensitivity को थोड़ा बढ़ाकर नया profile generate करके देखो। बहुत बड़ा बदलाव एक साथ न करें।";
+
+  }
+
+
+  else if(type==="high"){
+
+    title.textContent="📈 Sensitivity ज्यादा high है";
+
+    text.textContent=
+    "Boost को Medium या Low करके Generate Again दबाओ। इससे profile का overall response थोड़ा controlled हो जाएगा।";
+
+  }
+
+
+  else if(type==="low"){
+
+    title.textContent="📉 Sensitivity ज्यादा low है";
+
+    text.textContent=
+    "Boost को High करके या Fast Drag style चुनकर नया profile generate करके देखो।";
+
+  }
+
+
+  else if(type==="drag"){
+
+    title.textContent="🎮 Drag सही नहीं हो रहा";
+
+    text.textContent=
+    "पहले Balanced style try करो और Fire Button की value check करो। फिर Generate Again करके नया profile test करो।";
+
+  }
+
+
+  else if(type==="other"){
+
+    title.textContent="⚙️ दूसरी problem";
+
+    text.textContent=
+    "Device Model, DPI और Fire Button की जानकारी दोबारा check करो। फिर Balanced + Medium settings के साथ नया profile generate करके test करो।";
+
+  }
+
+
+  document.getElementById("solution")
+    .style.display="block";
+
+}
+
+
+/* COPY */
+
+function copyValues(){
+
+  if(!current){
+    alert("पहले sensitivity generate करो!");
+    return;
+  }
+
+  const text=
+`MACRO SENSITIVITY
+
+General: ${current.general}
+Red Dot: ${current.red}
+2X Scope: ${current.two}
+4X Scope: ${current.four}
+Sniper: ${current.sniper}
+Free Look: ${current.free}`;
+
+  if(navigator.clipboard){
+
+    navigator.clipboard.writeText(text)
+      .then(()=>alert("Sensitivity Copied ✅"))
+      .catch(()=>alert("Copy नहीं हो पाया।"));
+
+  }else{
+
+    alert(text);
+
+  }
+
+}
+
+
+/* SAVE */
+
+function openProfile(){
+  closeMenu();
+  const input=document.getElementById("profileNameInput");
+  input.value=localStorage.getItem("profileName") || "Macro Sensi User";
+  document.getElementById("profileModal").classList.add("show");
+}
+
+function saveProfileName(){
+  const name=document.getElementById("profileNameInput").value.trim();
+  if(!name){ alert("Profile name खाली नहीं हो सकता।"); return; }
+  localStorage.setItem("profileName",name);
+  alert("Profile Updated ✅");
+  closeModal("profileModal");
+}
+
+  if(!current){
+    alert("पहले sensitivity generate करो!");
+    return;
+  }
+
+  let data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
+
+  data.unshift({
+    ...current,
+    brand:document.getElementById("brand").value.trim(),
+    model:document.getElementById("model").value.trim(),
+    android:document.getElementById("android").value.trim(),
+    ram:document.getElementById("ram").value,
+    dpi:document.getElementById("dpi").value,
+    fire:document.getElementById("fire").value,
+    style:document.getElementById("style").value,
+    boost:document.getElementById("boost").value,
+    date:new Date().toLocaleString()
+  });
+
+  localStorage.setItem(
+    "macroProfiles",
+    JSON.stringify(data)
+  );
+
+  loadHistory();
+
+  alert("Profile Saved ✅");
+
+}
+
+
+/* HISTORY */
+
+function loadHistory(){
+
+  const box=
+    document.getElementById("history");
+
+  const data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
+
+
+  if(!data.length){
+
+    box.innerHTML=
+      '<div class="empty">No saved profiles</div>';
+
+    return;
+
+  }
+
+
+  box.innerHTML="";
+
+
+  data.forEach((p,index)=>{
+
+    const div=
+      document.createElement("div");
+
+    div.className="historyItem";
+
+    div.innerHTML=`
+
+      <span class="delete"
+            onclick="deleteProfile(${index})">
+        ✕
+      </span>
+
+      <b>Profile ${data.length-index}</b>
+
+      <p>
+        General: ${p.general}<br>
+        Red Dot: ${p.red}<br>
+        2X: ${p.two}<br>
+        4X: ${p.four}<br>
+        Sniper: ${p.sniper}<br>
+        Free Look: ${p.free}
+      </p>
+
+      <small>${p.date}</small>
+    `;
+
+    box.appendChild(div);
+
+  });
+
+}
+
+
+/* DELETE */
+
+function deleteProfile(index){
+
+  let data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
+
+  data.splice(index,1);
+
+  localStorage.setItem(
+    "macroProfiles",
+    JSON.stringify(data)
+  );
+
+  loadHistory();
+
+}
+
+
+/* CLEAR HISTORY */
+
+function clearHistory(){
+
+  if(confirm("पूरी saved history delete करें?")){
+
+    localStorage.removeItem("macroProfiles");
+
+    loadHistory();
+
+  }
+
+}
+
+
+/* RESET */
+
+function resetApp(){
+
+  document.getElementById("brand").value="";
+  document.getElementById("model").value="";
+  document.getElementById("android").value="";
+  document.getElementById("dpi").value="";
+  document.getElementById("fire").value="";
+
+  document.getElementById("ram").selectedIndex=0;
+  document.getElementById("style").selectedIndex=0;
+  document.getElementById("boost").selectedIndex=0;
+
+  document.getElementById("result").style.display="none";
+
+  current=null;
+
+}
+
+
+/* LOAD HISTORY */
+
+loadHistory();
+
+function toggleMenu(){
+  const box=document.getElementById("menuBox");
+  box.style.display=box.style.display==="block" ? "none" : "block";
+}
+
+function closeMenu(){
+  const box=document.getElementById("menuBox");
+  if(box) box.style.display="none";
+}
+
+function openSettings(){
+  closeMenu();
+  const saved=JSON.parse(localStorage.getItem("appSettings") || "{}");
+  document.getElementById("soundSetting").checked=saved.sound !== false;
+  document.getElementById("autoSaveSetting").checked=saved.autoSave === true;
+  document.getElementById("settingsModal").classList.add("show");
+}
+
+function saveSettings(){
+  localStorage.setItem("appSettings",JSON.stringify({
+    sound:document.getElementById("soundSetting").checked,
+    autoSave:document.getElementById("autoSaveSetting").checked
+  }));
+}
+
+function openPrivacy(){
+  closeMenu();
+  document.getElementById("privacyModal").classList.add("show");
+}
+
+function closeModal(id){
+  const modal=document.getElementById(id);
+  if(modal) modal.classList.remove("show");
+}
+
+function closeModalOnBackdrop(event,id){
+  if(event.target.id===id) closeModal(id);
+}
+
+function clearAppData(){
+  if(!confirm("Saved profiles, profile name और settings delete करें?")) return;
+  localStorage.removeItem("macroProfiles");
+  localStorage.removeItem("profileName");
+  localStorage.removeItem("appSettings");
+  loadHistory();
+  alert("App data cleared ✅");
+  closeModal("settingsModal");
+}
+
+document.addEventListener("click",function(event){
+  const box=document.getElementById("menuBox");
+  if(box && !event.target.closest(".top-menu") && !event.target.closest("#menuBox")){
+    box.style.display="none";
+  }
+});
+
+document.addEventListener("keydown",function(event){
+  if(event.key==="Escape"){
+    closeMenu();
+    ["settingsModal","privacyModal","profileModal"].forEach(closeModal);
+  }
+});
+</script>
+
+</body>
+</html>
