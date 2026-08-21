@@ -453,6 +453,10 @@ button:active{
 <div class="app">
 
 <div class="header">
+  <div class="top-menu">
+  <button class="top-btn" onclick="toggleMenu()">☰</button>
+  <button class="top-btn" onclick="openProfile()">👤</button>
+  </div>
   <div class="logo">🎯</div>
   <h1>MACRO SENSI</h1>
   <div class="sub">Unlimited Macro Sensitivity Generator</div>
@@ -1187,7 +1191,15 @@ function resetApp(){
 
 loadHistory();
 
-</script>
+function toggleMenu(){
+  const box = document.getElementById("menuBox");
+  box.style.display =
+    box.style.display === "block" ? "none" : "block";
+}
+
+function openProfile(){
+  alert("Profile\n\nMacro Sensi User");
+  }</script>
 
 </body>
 </html>
