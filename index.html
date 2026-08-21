@@ -1207,28 +1207,6 @@ function toggleMenu(){
   box.style.display =
     box.style.display === "block" ? "none" : "block";
 }
-
-function openProfile(){
-
-  const name = prompt(
-    "👤 Profile Name",
-    localStorage.getItem("profileName") || "Macro Sensi User"
-  );
-
-  if(name !== null && name.trim() !== ""){
-
-    localStorage.setItem(
-      "profileName",
-      name.trim()
-    );
-
-    alert(
-      "✅ Profile Updated!\n\nName: " +
-      name.trim()
-    );
-
-  }
-
 </script>
 
 </body>
