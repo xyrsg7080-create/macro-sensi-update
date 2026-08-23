@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Macro Sensi Generator</title>
+<title>Macro Sensi Generator • Working Build</title>
 
 <style>
 *{box-sizing:border-box}
@@ -326,7 +326,7 @@ button:active{
   </div>
   <div class="logo">🎯</div>
   <h1>MACRO SENSI</h1>
-  <div class="sub">Unlimited Macro Sensitivity Generator</div>
+  <div class="sub">Unlimited Sensitivity Generator</div>
 </div>
 
 
@@ -373,7 +373,13 @@ button:active{
     <h2>👤 Profile</h2>
     <label>Profile Name</label>
     <input id="profileNameInput" placeholder="Macro Sensi User">
-    <button class="generate" style="margin-top:12px" onclick="saveProfileName()">💾 Save Profile Name</button>
+    <button class="generate" style="margin-top:12px" onclick="saveNamedProfile()">💾 Save Profile</button>
+
+    <div style="margin-top:18px">
+      <h3 style="margin-bottom:10px">🗂️ My Saved Profiles</h3>
+      <div id="profileList"></div>
+    </div>
+
     <button class="close-btn" onclick="closeModal('profileModal')">Close</button>
   </div>
 </div>
@@ -434,7 +440,7 @@ button:active{
 </div>
 
 
-<button class="generate" onclick="generate()">
+<button class="generate" onclick="playButtonSound();generate()">
 ⚡ GENERATE MACRO SENSITIVITY
 </button>
 
@@ -480,19 +486,19 @@ button:active{
 
 <div class="buttons">
 
-<button class="btn" onclick="copyValues()">
+<button class="btn" onclick="playButtonSound();copyValues()">
 📋 Copy
 </button>
 
-<button class="btn" onclick="saveProfile()">
+<button class="btn" onclick="playButtonSound();saveProfile()">
 💾 Save
 </button>
 
-<button class="btn" onclick="generate()">
+<button class="btn" onclick="playButtonSound();generate()">
 🔄 Generate Again
 </button>
 
-<button class="btn" onclick="resetApp()">
+<button class="btn" onclick="playButtonSound();resetApp()">
 ♻️ Reset
 </button>
 
@@ -617,8 +623,8 @@ Macro Sensi Generator • Unlimited Profiles
 
 <script>
 
-const APP_VERSION_CODE = 1;
-const APP_VERSION_NAME = "1.0";
+const APP_VERSION_CODE = 2;
+const APP_VERSION_NAME = "1.1";
 
 const UPDATE_URL =
 "https://raw.githubusercontent.com/xyrsg7080-create/macro-sensi-update/main/version.json";
@@ -793,6 +799,10 @@ function generate(){
 
   document.getElementById("result").style.display="block";
 
+  const appSettings = JSON.parse(localStorage.getItem("appSettings") || "{}");
+  if(appSettings.autoSave === true){
+    saveProfile();
+  }
 
   /* RESET FEEDBACK FOR NEW GENERATION */
 
@@ -960,6 +970,7 @@ function openProfile(){
   closeMenu();
   const input=document.getElementById("profileNameInput");
   input.value=localStorage.getItem("profileName") || "Macro Sensi User";
+  renderProfileList();
   document.getElementById("profileModal").classList.add("show");
 }
 
@@ -967,22 +978,24 @@ function saveProfileName(){
   const name=document.getElementById("profileNameInput").value.trim();
   if(!name){ alert("Profile name खाली नहीं हो सकता।"); return; }
   localStorage.setItem("profileName",name);
-  alert("Profile Updated ✅");
-  closeModal("profileModal");
+  alert("Profile Name Updated ✅");
+  renderProfileList();
 }
 
+function saveNamedProfile(){
+  const name=document.getElementById("profileNameInput").value.trim();
+  if(!name){ alert("Profile name खाली नहीं हो सकता।"); return; }
   if(!current){
     alert("पहले sensitivity generate करो!");
     return;
   }
 
-  let data=
-    JSON.parse(
-      localStorage.getItem("macroProfiles") || "[]"
-    );
+  localStorage.setItem("profileName",name);
 
+  let data=JSON.parse(localStorage.getItem("macroProfiles") || "[]");
   data.unshift({
     ...current,
+    profileName:name,
     brand:document.getElementById("brand").value.trim(),
     model:document.getElementById("model").value.trim(),
     android:document.getElementById("android").value.trim(),
@@ -994,203 +1007,31 @@ function saveProfileName(){
     date:new Date().toLocaleString()
   });
 
-  localStorage.setItem(
-    "macroProfiles",
-    JSON.stringify(data)
-  );
-
+  localStorage.setItem("macroProfiles",JSON.stringify(data));
   loadHistory();
-
-  alert("Profile Saved ✅");
-
+  renderProfileList();
+  alert("Profile Saved Successfully ✅");
 }
 
+function renderProfileList(){
+  const box=document.getElementById("profileList");
+  if(!box) return;
 
-/* HISTORY */
-
-function loadHistory(){
-
-  const box=
-    document.getElementById("history");
-
-  const data=
-    JSON.parse(
-      localStorage.getItem("macroProfiles") || "[]"
-    );
-
-
+  const data=JSON.parse(localStorage.getItem("macroProfiles") || "[]");
   if(!data.length){
-
-    box.innerHTML=
-      '<div class="empty">No saved profiles</div>';
-
+    box.innerHTML='<div class="empty">No saved profiles yet</div>';
     return;
-
   }
 
-
-  box.innerHTML="";
-
-
-  data.forEach((p,index)=>{
-
-    const div=
-      document.createElement("div");
-
-    div.className="historyItem";
-
-    div.innerHTML=`
-
-      <span class="delete"
-            onclick="deleteProfile(${index})">
-        ✕
-      </span>
-
-      <b>Profile ${data.length-index}</b>
-
-      <p>
-        General: ${p.general}<br>
-        Red Dot: ${p.red}<br>
-        2X: ${p.two}<br>
-        4X: ${p.four}<br>
-        Sniper: ${p.sniper}<br>
-        Free Look: ${p.free}
-      </p>
-
-      <small>${p.date}</small>
-    `;
-
-    box.appendChild(div);
-
-  });
-
+  box.innerHTML=data.map((p,index)=>`
+    <div class="historyItem" style="cursor:pointer" onclick="loadSavedProfile(${index})">
+      <b>👤 ${escapeHtml(p.profileName || ('Profile '+(data.length-index)))}</b>
+      <p>General: ${p.general} &nbsp; Red Dot: ${p.red}</p>
+      <small>${escapeHtml(p.date || '')}</small>
+      <button class="btn" style="margin-top:8px" onclick="event.stopPropagation();deleteProfile(${index});renderProfileList();">🗑️ Delete</button>
+    </div>
+  `).join('');
 }
 
-
-/* DELETE */
-
-function deleteProfile(index){
-
-  let data=
-    JSON.parse(
-      localStorage.getItem("macroProfiles") || "[]"
-    );
-
-  data.splice(index,1);
-
-  localStorage.setItem(
-    "macroProfiles",
-    JSON.stringify(data)
-  );
-
-  loadHistory();
-
-}
-
-
-/* CLEAR HISTORY */
-
-function clearHistory(){
-
-  if(confirm("पूरी saved history delete करें?")){
-
-    localStorage.removeItem("macroProfiles");
-
-    loadHistory();
-
-  }
-
-}
-
-
-/* RESET */
-
-function resetApp(){
-
-  document.getElementById("brand").value="";
-  document.getElementById("model").value="";
-  document.getElementById("android").value="";
-  document.getElementById("dpi").value="";
-  document.getElementById("fire").value="";
-
-  document.getElementById("ram").selectedIndex=0;
-  document.getElementById("style").selectedIndex=0;
-  document.getElementById("boost").selectedIndex=0;
-
-  document.getElementById("result").style.display="none";
-
-  current=null;
-
-}
-
-
-/* LOAD HISTORY */
-
-loadHistory();
-
-function toggleMenu(){
-  const box=document.getElementById("menuBox");
-  box.style.display=box.style.display==="block" ? "none" : "block";
-}
-
-function closeMenu(){
-  const box=document.getElementById("menuBox");
-  if(box) box.style.display="none";
-}
-
-function openSettings(){
-  closeMenu();
-  const saved=JSON.parse(localStorage.getItem("appSettings") || "{}");
-  document.getElementById("soundSetting").checked=saved.sound !== false;
-  document.getElementById("autoSaveSetting").checked=saved.autoSave === true;
-  document.getElementById("settingsModal").classList.add("show");
-}
-
-function saveSettings(){
-  localStorage.setItem("appSettings",JSON.stringify({
-    sound:document.getElementById("soundSetting").checked,
-    autoSave:document.getElementById("autoSaveSetting").checked
-  }));
-}
-
-function openPrivacy(){
-  closeMenu();
-  document.getElementById("privacyModal").classList.add("show");
-}
-
-function closeModal(id){
-  const modal=document.getElementById(id);
-  if(modal) modal.classList.remove("show");
-}
-
-function closeModalOnBackdrop(event,id){
-  if(event.target.id===id) closeModal(id);
-}
-
-function clearAppData(){
-  if(!confirm("Saved profiles, profile name और settings delete करें?")) return;
-  localStorage.removeItem("macroProfiles");
-  localStorage.removeItem("profileName");
-  localStorage.removeItem("appSettings");
-  loadHistory();
-  alert("App data cleared ✅");
-  closeModal("settingsModal");
-}
-
-document.addEventListener("click",function(event){
-  const box=document.getElementById("menuBox");
-  if(box && !event.target.closest(".top-menu") && !event.target.closest("#menuBox")){
-    box.style.display="none";
-  }
-});
-
-document.addEventListener("keydown",function(event){
-  if(event.key==="Escape"){
-    closeMenu();
-    ["settingsModal","privacyModal","profileModal"].forEach(closeModal);
-  }
-});
-</script>
-
-</body>
-</html>
+function escapeHtml(value){
+  return String(val
