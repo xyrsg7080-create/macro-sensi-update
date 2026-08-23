@@ -321,21 +321,21 @@ button:active{
 
 <div class="header">
   <div class="top-menu">
-  <button class="top-btn" onclick="toggleMenu()">☰</button>
-  <button class="top-btn" onclick="openProfile()">👤</button>
+  <button class="top-btn" id="menuBtn">☰</button>
+  <button class="top-btn" id="profileBtn">👤</button>
   </div>
   <div class="logo">🎯</div>
   <h1>MACRO SENSI</h1>
-  <div class="sub">Unlimited macro Sensitivity Generator</div>
+  <div class="sub">Unlimited Macro Sensitivity Generator</div>
 </div>
 
 
 <!-- WORKING MENU -->
 <div id="menuBox" class="menu-box">
-  <button class="menu-item" onclick="openSettings()">⚙️ Settings</button>
-  <button class="menu-item" onclick="openPrivacy()">🔒 Privacy Policy</button>
-  <button class="menu-item" onclick="openProfile()">👤 Profile</button>
-  <button class="menu-item" onclick="closeMenu()">✖️ Close Menu</button>
+  <button class="menu-item" id="settingsBtn">⚙️ Settings</button>
+  <button class="menu-item" id="privacyBtn">🔒 Privacy Policy</button>
+  <button class="menu-item" id="menuProfileBtn">👤 Profile</button>
+  <button class="menu-item" id="closeMenuBtn">✖️ Close Menu</button>
 </div>
 
 <!-- SETTINGS -->
@@ -1034,4 +1034,5 @@ function renderProfileList(){
 }
 
 function escapeHtml(value){
-  return String(val
+  return String(value).replace(/[&<>"']/g,function(ch){
+    r
