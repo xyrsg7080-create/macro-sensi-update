@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Macro Sensi Generator • Working Build</title>
+<title>Macro Sensi Generator • WebView Fixed</title>
 
 <style>
 *{box-sizing:border-box}
@@ -344,14 +344,14 @@ button:active{
     <h2>⚙️ Settings</h2>
     <div class="setting-row">
       <span>🔊 Button feedback</span>
-      <input id="soundSetting" type="checkbox" checked onchange="saveSettings()">
+      <input id="soundSetting" type="checkbox" checked>
     </div>
     <div class="setting-row">
       <span>💾 Auto-save generated profile</span>
-      <input id="autoSaveSetting" type="checkbox" onchange="saveSettings()">
+      <input id="autoSaveSetting" type="checkbox">
     </div>
-    <button class="btn" style="width:100%;margin-top:15px" onclick="clearAppData()">🗑️ Clear App Data</button>
-    <button class="close-btn" onclick="closeModal('settingsModal')">Close</button>
+    <button class="btn" id="clearAppDataBtn" style="width:100%;margin-top:15px" type="button">🗑️ Clear App Data</button>
+    <button class="close-btn" id="closeSettingsBtn" type="button">Close</button>
   </div>
 </div>
 
@@ -363,7 +363,7 @@ button:active{
     <p>Saved profiles, your profile name, and app settings are stored locally in browser/app storage.</p>
     <p>This page does not send those saved values to a server. The app can contact the configured update URL only to check whether a newer version is available.</p>
     <p>You can delete locally stored data from Settings → Clear App Data.</p>
-    <button class="close-btn" onclick="closeModal('privacyModal')">Close</button>
+    <button class="close-btn" id="closePrivacyBtn" type="button">Close</button>
   </div>
 </div>
 
@@ -373,14 +373,14 @@ button:active{
     <h2>👤 Profile</h2>
     <label>Profile Name</label>
     <input id="profileNameInput" placeholder="Macro Sensi User">
-    <button class="generate" style="margin-top:12px" onclick="saveNamedProfile()">💾 Save Profile</button>
+    <button class="generate" style="margin-top:12px" id="saveNamedProfileBtn" type="button">💾 Save Profile</button>
 
     <div style="margin-top:18px">
       <h3 style="margin-bottom:10px">🗂️ My Saved Profiles</h3>
       <div id="profileList"></div>
     </div>
 
-    <button class="close-btn" onclick="closeModal('profileModal')">Close</button>
+    <button class="close-btn" id="closeProfileBtn" type="button">Close</button>
   </div>
 </div>
 
@@ -623,8 +623,8 @@ Macro Sensi Generator • Unlimited Profiles
 
 <script>
 
-const APP_VERSION_CODE = 2;
-const APP_VERSION_NAME = "1.1";
+const APP_VERSION_CODE = 3;
+const APP_VERSION_NAME = "1.2";
 
 const UPDATE_URL =
 "https://raw.githubusercontent.com/xyrsg7080-create/macro-sensi-update/main/version.json";
@@ -1035,4 +1035,4 @@ function renderProfileList(){
 
 function escapeHtml(value){
   return String(value).replace(/[&<>"']/g,function(ch){
-    r
+    return {'&':'&amp;','<':'&lt;','>':'&gt
