@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Macro Sensi Generator • WebView Fixed</title>
+<title>Macro Sensi Generator</title>
 
 <style>
 *{box-sizing:border-box}
@@ -139,6 +139,17 @@ select:focus{
   cursor:pointer;
 }
 
+.expert-panel{
+  margin-top:14px;padding:14px;border-radius:14px;
+  background:#0c121c;border:1px solid #263143;
+}
+.expert-title{font-weight:bold;margin-bottom:10px;color:#f1f5fb}
+.expert-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.expert-grid div{padding:10px;border-radius:10px;background:#090d14;border:1px solid #202b3c}
+.expert-grid span{display:block;color:#7f8b9e;font-size:11px}
+.expert-grid strong{display:block;margin-top:4px;font-size:17px;color:#ff5570}
+.expert-note{margin-top:10px;color:#aeb7c6;font-size:12px;line-height:1.45}
+
 .feedback{
   margin-top:18px;
   padding-top:16px;
@@ -270,48 +281,6 @@ select:focus{
 button:active{
   transform:scale(.97);
 }
-  /* WORKING TOP MENU */
-.header{position:relative}
-.top-menu{
-  position:absolute;top:12px;right:0;
-  display:flex;gap:8px;
-}
-.top-btn{
-  width:42px;height:42px;border:1px solid #333b4d;
-  border-radius:50%;background:#111722;color:#fff;
-  font-size:20px;cursor:pointer;
-}
-.menu-box{
-  display:none;position:fixed;top:68px;right:15px;width:220px;
-  background:#111722;border:1px solid #333b4d;border-radius:15px;
-  padding:10px;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.55);
-}
-.menu-item{
-  width:100%;padding:13px;margin:4px 0;border:0;border-radius:10px;
-  background:#1a2230;color:#fff;text-align:left;font-size:15px;cursor:pointer;
-}
-.modal{
-  display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);
-  z-index:10000;align-items:center;justify-content:center;padding:20px;
-}
-.modal.show{display:flex}
-.modal-content{
-  width:100%;max-width:420px;max-height:85vh;overflow:auto;
-  background:#111722;border:1px solid #333b4d;border-radius:18px;
-  padding:20px;color:#fff;
-}
-.modal-content h2{margin-top:0}
-.modal-content p{color:#b9c2d0;font-size:13px;line-height:1.6}
-.setting-row{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;padding:13px 0;border-bottom:1px solid #252f40;
-  color:#dbe2ec;font-size:14px;
-}
-.setting-row input[type="checkbox"]{width:20px;height:20px;accent-color:#ff3658}
-.close-btn{
-  width:100%;padding:12px;margin-top:15px;border:0;border-radius:10px;
-  background:#ff1744;color:#fff;font-weight:bold;cursor:pointer;
-}
 </style>
 </head>
 
@@ -320,68 +289,9 @@ button:active{
 <div class="app">
 
 <div class="header">
-  <div class="top-menu">
-  <button class="top-btn" id="menuBtn">☰</button>
-  <button class="top-btn" id="profileBtn">👤</button>
-  </div>
   <div class="logo">🎯</div>
   <h1>MACRO SENSI</h1>
   <div class="sub">Unlimited Sensitivity Generator</div>
-</div>
-
-
-<!-- WORKING MENU -->
-<div id="menuBox" class="menu-box">
-  <button class="menu-item" id="settingsBtn">⚙️ Settings</button>
-  <button class="menu-item" id="privacyBtn">🔒 Privacy Policy</button>
-  <button class="menu-item" id="menuProfileBtn">👤 Profile</button>
-  <button class="menu-item" id="closeMenuBtn">✖️ Close Menu</button>
-</div>
-
-<!-- SETTINGS -->
-<div id="settingsModal" class="modal" onclick="closeModalOnBackdrop(event,'settingsModal')">
-  <div class="modal-content">
-    <h2>⚙️ Settings</h2>
-    <div class="setting-row">
-      <span>🔊 Button feedback</span>
-      <input id="soundSetting" type="checkbox" checked>
-    </div>
-    <div class="setting-row">
-      <span>💾 Auto-save generated profile</span>
-      <input id="autoSaveSetting" type="checkbox">
-    </div>
-    <button class="btn" id="clearAppDataBtn" style="width:100%;margin-top:15px" type="button">🗑️ Clear App Data</button>
-    <button class="close-btn" id="closeSettingsBtn" type="button">Close</button>
-  </div>
-</div>
-
-<!-- PRIVACY POLICY -->
-<div id="privacyModal" class="modal" onclick="closeModalOnBackdrop(event,'privacyModal')">
-  <div class="modal-content">
-    <h2>🔒 Privacy Policy</h2>
-    <p><b>Macro Sensi Generator</b> uses the information you enter to generate sensitivity profiles.</p>
-    <p>Saved profiles, your profile name, and app settings are stored locally in browser/app storage.</p>
-    <p>This page does not send those saved values to a server. The app can contact the configured update URL only to check whether a newer version is available.</p>
-    <p>You can delete locally stored data from Settings → Clear App Data.</p>
-    <button class="close-btn" id="closePrivacyBtn" type="button">Close</button>
-  </div>
-</div>
-
-<!-- PROFILE -->
-<div id="profileModal" class="modal" onclick="closeModalOnBackdrop(event,'profileModal')">
-  <div class="modal-content">
-    <h2>👤 Profile</h2>
-    <label>Profile Name</label>
-    <input id="profileNameInput" placeholder="Macro Sensi User">
-    <button class="generate" style="margin-top:12px" id="saveNamedProfileBtn" type="button">💾 Save Profile</button>
-
-    <div style="margin-top:18px">
-      <h3 style="margin-bottom:10px">🗂️ My Saved Profiles</h3>
-      <div id="profileList"></div>
-    </div>
-
-    <button class="close-btn" id="closeProfileBtn" type="button">Close</button>
-  </div>
 </div>
 
 <div class="card">
@@ -440,7 +350,7 @@ button:active{
 </div>
 
 
-<button class="generate" onclick="playButtonSound();generate()">
+<button class="generate" type="button" onclick="generate()">
 ⚡ GENERATE MACRO SENSITIVITY
 </button>
 
@@ -486,24 +396,34 @@ button:active{
 
 <div class="buttons">
 
-<button class="btn" onclick="playButtonSound();copyValues()">
+<button class="btn" onclick="copyValues()">
 📋 Copy
 </button>
 
-<button class="btn" onclick="playButtonSound();saveProfile()">
+<button class="btn" onclick="saveProfile()">
 💾 Save
 </button>
 
-<button class="btn" onclick="playButtonSound();generate()">
+<button class="btn" type="button" onclick="generate()">
 🔄 Generate Again
 </button>
 
-<button class="btn" onclick="playButtonSound();resetApp()">
+<button class="btn" onclick="resetApp()">
 ♻️ Reset
 </button>
 
 </div>
 
+<div class="expert-panel" id="expertPanel">
+  <div class="expert-title">🧠 Expert Analysis</div>
+  <div class="expert-grid">
+    <div><span>Headshot Focus</span><strong id="headshotScore">--</strong></div>
+    <div><span>Control</span><strong id="controlScore">--</strong></div>
+    <div><span>Drag Speed</span><strong id="dragScore">--</strong></div>
+    <div><span>Stability</span><strong id="stabilityScore">--</strong></div>
+  </div>
+  <div class="expert-note" id="expertNote">Generate a profile to see expert analysis.</div>
+</div>
 
 <!-- FEEDBACK -->
 
@@ -623,56 +543,6 @@ Macro Sensi Generator • Unlimited Profiles
 
 <script>
 
-const APP_VERSION_CODE = 3;
-const APP_VERSION_NAME = "1.2";
-
-const UPDATE_URL =
-"https://raw.githubusercontent.com/xyrsg7080-create/macro-sensi-update/main/version.json";
-
-async function checkForUpdate(){
-
-  try{
-
-    const response =
-      await fetch(UPDATE_URL + "?t=" + Date.now());
-
-    if(!response.ok) return;
-
-    const data = await response.json();
-
-    if(data.versionCode > APP_VERSION_CODE){
-
-      const updateNow = confirm(
-`🔥 NEW UPDATE AVAILABLE!
-
-Version: ${data.versionName}
-
-${data.updateMessage}
-
-क्या अभी Update करना है?`
-      );
-
-      if(updateNow && data.apkUrl){
-
-        window.location.href = data.apkUrl;
-
-      }
-    }
-
-  }catch(error){
-
-    console.log("Update check failed:", error);
-
-  }
-
-}
-
-window.addEventListener("load", function(){
-
-  setTimeout(checkForUpdate, 1500);
-
-});
-
 let current=null;
 
 
@@ -692,132 +562,86 @@ function clamp(n){
 
 /* GENERATE */
 
+function safeNumber(id, fallback, min, max){
+  const el=document.getElementById(id);
+  if(!el) return fallback;
+  const n=Number(el.value);
+  if(!Number.isFinite(n)) return fallback;
+  return Math.min(max,Math.max(min,n));
+}
+
+function weighted(base, offset, spread){
+  return clamp(base + offset + rand(-spread,spread));
+}
+
+function scoreLabel(n){
+  if(n>=90) return "Excellent";
+  if(n>=80) return "Very Good";
+  if(n>=70) return "Good";
+  if(n>=60) return "Balanced";
+  return "Controlled";
+}
+
+/* EXPERT GENERATOR */
 function generate(){
+  const dpi=safeNumber("dpi",435,200,800);
+  const fire=safeNumber("fire",45,1,100);
+  const ram=safeNumber("ram",6,1,32);
+  const style=document.getElementById("style")?.value || "balanced";
+  const boost=document.getElementById("boost")?.value || "medium";
 
-  const dpi =
-    Number(document.getElementById("dpi").value) || 435;
+  let base=146;
+  base += (dpi-435)*0.055;
+  base += (45-fire)*0.16;
+  base += Math.min(4,Math.max(-3,(ram-6)*0.25));
 
-  const fire =
-    Number(document.getElementById("fire").value) || 45;
+  const styleAdjust={balanced:0,headshot:8,fast:13,control:-8};
+  base += styleAdjust[style] ?? 0;
 
-  const style =
-    document.getElementById("style").value;
-
-  const boost =
-    document.getElementById("boost").value;
-
-
-  /*
-  200 सिर्फ maximum है।
-  Values 200 पर fixed नहीं हैं।
-  */
-
-  let base=rand(125,165);
-
-
-  /* DPI */
-
-  if(dpi>=500)
-    base+=rand(3,10);
-
-  else if(dpi>=450)
-    base+=rand(1,6);
-
-  else if(dpi<400)
-    base-=rand(2,7);
-
-
-  /* FIRE BUTTON */
-
-  if(fire>=50)
-    base-=rand(1,5);
-
-  else if(fire<=40)
-    base+=rand(1,5);
-
-
-  /* STYLE */
-
-  if(style==="headshot")
-    base+=rand(4,12);
-
-  if(style==="fast")
-    base+=rand(6,15);
-
-  if(style==="control")
-    base-=rand(5,12);
-
-
-  /* BOOST */
-
-  if(boost==="low")
-    base-=rand(2,6);
-
-  if(boost==="medium")
-    base+=rand(0,5);
-
-  if(boost==="high")
-    base+=rand(4,10);
-
-  if(boost==="extreme")
-    base+=rand(8,16);
-
-
-  /* DIFFERENT VALUES */
+  const boostAdjust={low:-6,medium:0,high:6,extreme:11};
+  base += boostAdjust[boost] ?? 0;
+  base=clamp(base);
 
   current={
-
-    general:clamp(base+rand(5,22)),
-
-    red:clamp(base+rand(8,27)),
-
-    two:clamp(base+rand(-4,18)),
-
-    four:clamp(base-rand(2,15)),
-
-    sniper:clamp(base-rand(25,55)),
-
-    free:clamp(base+rand(0,20))
-
+    general:weighted(base,10,4),
+    red:weighted(base,17,4),
+    two:weighted(base,8,4),
+    four:weighted(base,-2,4),
+    sniper:weighted(base,-30,3),
+    free:weighted(base,4,5)
   };
 
-
-  /* DISPLAY */
+  current.red=clamp(Math.max(current.general-2,current.red));
+  current.sniper=clamp(Math.min(current.sniper,current.four-8));
 
   document.getElementById("general").textContent=current.general;
-
   document.getElementById("red").textContent=current.red;
-
   document.getElementById("two").textContent=current.two;
-
   document.getElementById("four").textContent=current.four;
-
   document.getElementById("sniper").textContent=current.sniper;
-
   document.getElementById("free").textContent=current.free;
 
+  const headshot=clamp(70 + (current.red-current.general)*2 + (style==="headshot"?15:0) + ((boost==="high"||boost==="extreme")?6:0));
+  const control=clamp(76 - Math.max(0,current.general-155)*1.5 + (style==="control"?14:0) - (boost==="extreme"?8:0));
+  const drag=clamp(68 + (current.red-145)*0.8 + (style==="fast"?18:0) + (boost==="high"?6:boost==="extreme"?10:0));
+  const stability=clamp(84 - Math.abs(current.general-current.four)*0.35 + (style==="control"?8:0) - (boost==="extreme"?7:0));
+
+  document.getElementById("headshotScore").textContent=headshot+"% • "+scoreLabel(headshot);
+  document.getElementById("controlScore").textContent=control+"% • "+scoreLabel(control);
+  document.getElementById("dragScore").textContent=drag+"% • "+scoreLabel(drag);
+  document.getElementById("stabilityScore").textContent=stability+"% • "+scoreLabel(stability);
+
+  let note="Balanced expert profile: good mix of drag speed and control.";
+  if(style==="headshot") note="Headshot-focused profile: higher General/Red Dot response for faster upward drag.";
+  if(style==="fast") note="Fast-drag profile: prioritizes quick target tracking; lower values may feel more controlled.";
+  if(style==="control") note="Control profile: steadier scope movement and reduced overshoot are prioritized.";
+  document.getElementById("expertNote").textContent=note;
 
   document.getElementById("result").style.display="block";
-
-  const appSettings = JSON.parse(localStorage.getItem("appSettings") || "{}");
-  if(appSettings.autoSave === true){
-    saveProfile();
-  }
-
-  /* RESET FEEDBACK FOR NEW GENERATION */
-
   document.getElementById("workingMessage").style.display="none";
-
   document.getElementById("problemBox").style.display="none";
-
   document.getElementById("solution").style.display="none";
-
-
-  document.getElementById("result").scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-
+  document.getElementById("result").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 
@@ -966,73 +790,158 @@ Free Look: ${current.free}`;
 
 /* SAVE */
 
-function openProfile(){
-  closeMenu();
-  const input=document.getElementById("profileNameInput");
-  input.value=localStorage.getItem("profileName") || "Macro Sensi User";
-  renderProfileList();
-  document.getElementById("profileModal").classList.add("show");
-}
+function saveProfile(){
 
-function saveProfileName(){
-  const name=document.getElementById("profileNameInput").value.trim();
-  if(!name){ alert("Profile name खाली नहीं हो सकता।"); return; }
-  localStorage.setItem("profileName",name);
-  alert("Profile Name Updated ✅");
-  renderProfileList();
-}
-
-function saveNamedProfile(){
-  const name=document.getElementById("profileNameInput").value.trim();
-  if(!name){ alert("Profile name खाली नहीं हो सकता।"); return; }
   if(!current){
     alert("पहले sensitivity generate करो!");
     return;
   }
 
-  localStorage.setItem("profileName",name);
+  let data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
 
-  let data=JSON.parse(localStorage.getItem("macroProfiles") || "[]");
   data.unshift({
     ...current,
-    profileName:name,
-    brand:document.getElementById("brand").value.trim(),
-    model:document.getElementById("model").value.trim(),
-    android:document.getElementById("android").value.trim(),
-    ram:document.getElementById("ram").value,
-    dpi:document.getElementById("dpi").value,
-    fire:document.getElementById("fire").value,
-    style:document.getElementById("style").value,
-    boost:document.getElementById("boost").value,
     date:new Date().toLocaleString()
   });
 
-  localStorage.setItem("macroProfiles",JSON.stringify(data));
+  localStorage.setItem(
+    "macroProfiles",
+    JSON.stringify(data)
+  );
+
   loadHistory();
-  renderProfileList();
-  alert("Profile Saved Successfully ✅");
+
+  alert("Profile Saved ✅");
+
 }
 
-function renderProfileList(){
-  const box=document.getElementById("profileList");
-  if(!box) return;
 
-  const data=JSON.parse(localStorage.getItem("macroProfiles") || "[]");
+/* HISTORY */
+
+function loadHistory(){
+
+  const box=
+    document.getElementById("history");
+
+  const data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
+
+
   if(!data.length){
-    box.innerHTML='<div class="empty">No saved profiles yet</div>';
+
+    box.innerHTML=
+      '<div class="empty">No saved profiles</div>';
+
     return;
+
   }
 
-  box.innerHTML=data.map((p,index)=>`
-    <div class="historyItem" style="cursor:pointer" onclick="loadSavedProfile(${index})">
-      <b>👤 ${escapeHtml(p.profileName || ('Profile '+(data.length-index)))}</b>
-      <p>General: ${p.general} &nbsp; Red Dot: ${p.red}</p>
-      <small>${escapeHtml(p.date || '')}</small>
-      <button class="btn" style="margin-top:8px" onclick="event.stopPropagation();deleteProfile(${index});renderProfileList();">🗑️ Delete</button>
-    </div>
-  `).join('');
+
+  box.innerHTML="";
+
+
+  data.forEach((p,index)=>{
+
+    const div=
+      document.createElement("div");
+
+    div.className="historyItem";
+
+    div.innerHTML=`
+
+      <span class="delete"
+            onclick="deleteProfile(${index})">
+        ✕
+      </span>
+
+      <b>Profile ${data.length-index}</b>
+
+      <p>
+        General: ${p.general}<br>
+        Red Dot: ${p.red}<br>
+        2X: ${p.two}<br>
+        4X: ${p.four}<br>
+        Sniper: ${p.sniper}<br>
+        Free Look: ${p.free}
+      </p>
+
+      <small>${p.date}</small>
+    `;
+
+    box.appendChild(div);
+
+  });
+
 }
 
-function escapeHtml(value){
-  return String(value).replace(/[&<>"']/g,function(ch){
-    return {'&':'&amp;','<':'&lt;','>':'&gt
+
+/* DELETE */
+
+function deleteProfile(index){
+
+  let data=
+    JSON.parse(
+      localStorage.getItem("macroProfiles") || "[]"
+    );
+
+  data.splice(index,1);
+
+  localStorage.setItem(
+    "macroProfiles",
+    JSON.stringify(data)
+  );
+
+  loadHistory();
+
+}
+
+
+/* CLEAR HISTORY */
+
+function clearHistory(){
+
+  if(confirm("पूरी saved history delete करें?")){
+
+    localStorage.removeItem("macroProfiles");
+
+    loadHistory();
+
+  }
+
+}
+
+
+/* RESET */
+
+function resetApp(){
+
+  document.getElementById("brand").value="";
+  document.getElementById("model").value="";
+  document.getElementById("android").value="";
+  document.getElementById("dpi").value="";
+  document.getElementById("fire").value="";
+
+  document.getElementById("ram").selectedIndex=0;
+  document.getElementById("style").selectedIndex=0;
+  document.getElementById("boost").selectedIndex=0;
+
+  document.getElementById("result").style.display="none";
+
+  current=null;
+
+}
+
+
+/* LOAD HISTORY */
+
+loadHistory();
+
+</script>
+
+</body>
+</html>
